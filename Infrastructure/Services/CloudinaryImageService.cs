@@ -49,7 +49,7 @@ namespace Infrastructure.Services
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
-               // Folder = $"products/user_{userId}",
+                Folder = $"products/user_{userId}",
                 //Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
             };
 

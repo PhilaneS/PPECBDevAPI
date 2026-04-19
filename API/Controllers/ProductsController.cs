@@ -39,7 +39,7 @@ namespace API.Controllers
             return Ok(ApiResponse<string>.SuccessResponse("Product created successfully."));
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateProduct([FromForm] CreateProductDto productDto)
+        public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDto productDto)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             await _productService.UpdateAsync(productDto, userId);

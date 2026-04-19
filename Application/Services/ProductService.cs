@@ -42,28 +42,28 @@ namespace Application.Services
             var product = _mapper.Map<Product>(productDto);
 
             if (productDto.Image != null)
-            {                
-                var (imageUrl, publicId) = await _imageService.UploadImageAsync(productDto.Image,userId);
+            {
+                var (imageUrl, publicId) = await _imageService.UploadImageAsync(productDto.Image, userId);
                 product.ImageUrl = imageUrl;
                 product.ImagePublicId = publicId;
-
-                product.ProductCode = productCode;
-                product.UserId = userId;
-                product.CreatedBy = userId;
-                product.CreatedDate = DateTime.UtcNow;
-                await _productRepository.CreateAsync(product);
             }
+            product.ProductCode = productCode;
+            product.UserId = userId;
+            product.CreatedBy = userId;
+            product.CreatedDate = DateTime.UtcNow;
+            await _productRepository.CreateAsync(product);
+
         }
 
-        public async Task UpdateAsync(CreateProductDto productDto, int userId)
+        public async Task UpdateAsync(UpdateProductDto productDto, int userId)
         {
-            var productCode = await _productCodeGenerator.GenerateProductCodeAsync();
+
             var product = _mapper.Map<Product>(productDto);
 
             if (productDto.Image != null)
             {
 
-                var (imageUrl, publicId) = await _imageService.UploadImageAsync(productDto.Image,userId);
+                var (imageUrl, publicId) = await _imageService.UploadImageAsync(productDto.Image, userId);
 
                 if (!string.IsNullOrEmpty(product.ImagePublicId))
                 {
@@ -72,11 +72,12 @@ namespace Application.Services
 
                 product.ImageUrl = imageUrl;
                 product.ImagePublicId = publicId;
-                product.UpdatedBy = userId;
-                product.UpdatedDate = DateTime.UtcNow;
             }
+            product.UpdatedBy = userId;
+            product.UpdatedDate = DateTime.UtcNow;
 
-            product.ProductCode = productCode;
+
+
             product.UserId = userId;
             await _productRepository.UpdateAsync(product);
 
