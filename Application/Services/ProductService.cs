@@ -92,6 +92,9 @@ namespace Application.Services
                 var productCode = await _productCodeGenerator.GenerateProductCodeAsync();
                 mappedProduct.ProductCode = productCode;
                 mappedProduct.UserId = userId;
+                mappedProduct.CreatedBy = userId;
+                mappedProduct.CreatedDate = DateTime.UtcNow;
+
                 await _productRepository.CreateAsync(mappedProduct);
             }
             return products;

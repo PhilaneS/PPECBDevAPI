@@ -49,26 +49,29 @@ namespace Infrastructure.Services
             var products = new List<ProductDto>();
 
             using var stream = new MemoryStream();
-
             await file.CopyToAsync(stream);
+            stream.Position = 0;
 
             using var package = new ExcelPackage(stream);
             var worksheet = package.Workbook.Worksheets[0];
-
             var rowCount = worksheet.Dimension.Rows;
 
-            for (int row = 2; row <= rowCount; row++)
+            for (int row = 2; row <= rowCount; row++) // skip header
             {
                 var product = new ProductDto
                 {
                     Name = worksheet.Cells[row, 1].Text,
                     Description = worksheet.Cells[row, 2].Text,
-                    Price = decimal.TryParse(worksheet.Cells[row, 3].Text, out var price) ? price : 0,
-                    ImageUrl = worksheet.Cells[row, 4].Text
+                    CategoryName = worksheet.Cells[row, 3].Text,
+                    CategoryId = int.TryParse(worksheet.Cells[row, 4].Text, out var categoryId) ? categoryId : 0,
+                    Price = decimal.TryParse(worksheet.Cells[row, 5].Text, out var price) ? price : 0
                 };
-                products.Add(product);            }
+
+                products.Add(product);
+            }
 
             return products;
+
         }
     }
 }
