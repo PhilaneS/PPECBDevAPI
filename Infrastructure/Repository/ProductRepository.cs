@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,22 +15,32 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
+        public async Task<Product> GetByIdAsync(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            
+            return product;
+        }
+
+
         public async Task<IEnumerable<Product>> GetByUserIdAsync(int userId)
         {
            return await _context.Products.Where(p => p.UserId == userId).ToListAsync();
         }
-        public async Task CreateAsync(Product product)
+        public async Task<Product> CreateAsync(Product product)
         {
-            await _context.Products.AddAsync(product);
+             _context.Products.Add(product);
             await _context.SaveChangesAsync();
+
+            return product;
         }       
 
-        public async Task<Product> GetByIdAsync(int id, int userId)
+        public async Task<Product> GetByIdAndUserIdAsync(int id, int userId)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
             if (product == null)
             {
-                throw new InvalidOperationException($"Product with Id {id} and UserId {userId} not found.");
+                throw new NotFoundException($"Product with Id {id} and UserId {userId} not found.");
             }
             return product;
         }
@@ -40,15 +51,11 @@ namespace Infrastructure.Repository
             await _context.SaveChangesAsync();
             return product;
         }
-        public Task DeleteAsync(int id, int userId)
+        public async Task DeleteAsync(int id, int userId)
         {
-           var deletedProduct =  _context.Products.Where(p => p.Id == id && p.UserId == userId);
-            if (deletedProduct == null)
-            {
-                throw new InvalidOperationException($"Product with Id {id} and UserId {userId} not found.");
-            }
+           var deletedProduct =  _context.Products.Where(p => p.Id == id && p.UserId == userId);            
             _context.Products.RemoveRange(deletedProduct);
-            return _context.SaveChangesAsync();
+            var deleted = await _context.SaveChangesAsync();
         }
         public async Task<(List<Product>, int)> GetPagedAsync(
            int userId,
@@ -69,5 +76,6 @@ namespace Infrastructure.Repository
 
             return (data, total);
         }
+
     }
 }

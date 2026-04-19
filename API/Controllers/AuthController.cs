@@ -1,9 +1,7 @@
 ﻿using Application.Services;
-using Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
-using Application.Common.Models;
+using API.Response;
 
 namespace API.Controllers
 {

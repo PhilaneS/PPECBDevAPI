@@ -23,7 +23,10 @@ namespace API
 
             // Add services to the container.
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ApiExceptionFilter>();
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -52,7 +55,7 @@ namespace API
 
             builder.Services.AddCustomCors();
 
-            builder.Services.AddAutoMapper(cfg => { }, typeof(AutoMapperProfile));
+            builder.Services.AddAutoMapper(cfg => { }, typeof(ProductProfile));
 
             var app = builder.Build();
 
@@ -62,7 +65,7 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseCors("AllowAll");
@@ -70,7 +73,6 @@ namespace API
             app.UseAuthentication();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

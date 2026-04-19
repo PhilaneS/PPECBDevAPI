@@ -2,12 +2,6 @@
 using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
@@ -26,11 +20,8 @@ namespace Infrastructure.Services
 
             // Add product data
             for (int i = 0; i < products.Count; i++)
-            {
-               // decimal price =0;
+            { 
                 var product = products[i];
-                //if (!decimal.TryParse(product.Price.ToString(), out price))
-                //    continue;
               
                 worksheet.Cells[i + 2, 1].Value = product.Name;
                 worksheet.Cells[i + 2, 2].Value = product.ProductCode;
@@ -53,7 +44,12 @@ namespace Infrastructure.Services
             stream.Position = 0;
 
             using var package = new ExcelPackage(stream);
-            var worksheet = package.Workbook.Worksheets[0];
+
+            var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+
+            if (worksheet == null)
+                throw new Exception("No worksheet found");
+
             var rowCount = worksheet.Dimension.Rows;
 
             for (int row = 2; row <= rowCount; row++) // skip header

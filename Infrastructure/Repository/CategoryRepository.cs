@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,31 +15,36 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<bool> CodeExistsAsync(string categoryCode)
+        public async Task<bool> CodeExistsAsync(string categoryCode, int excludeCategoryId)
         {
-            return await _context.Categories.AnyAsync(c => c.CategoryCode == categoryCode);
+            return await _context.Categories.AnyAsync(c => c.CategoryCode == categoryCode && c.CategoryId != excludeCategoryId);
         }
 
-        public async Task CreateAsync(Category categoryDto)
+        public async Task<Category> CreateAsync(Category category)
         {
-            _context.Categories.Add(categoryDto);
-             await _context.SaveChangesAsync();
+            _context.Categories.Add(category);
+            await _context.SaveChangesAsync();
+            return category;
         }
-        public async Task<Category?> GetByIdAsync(int id, int userId)
+        public async Task<Category> UpdateAsync(Category category)
         {
-            return await _context.Categories.FirstOrDefaultAsync(c=> c.CategoryId == id && c.UserId == userId);
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
+            return category;
+        }
+
+        public async Task<Category> GetByIdAsync(int id, int userId)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id && c.UserId == userId);
+            if (category == null)
+                throw new NotFoundException("Category is not found");
+            return category;
         }
 
         public async Task<IEnumerable<Category>> GetByUserIdAsync(int userId)
         {
             return await _context.Categories.Where(c => c.UserId == userId).ToListAsync();
         }
-
-        public async Task<Category> UpdateAsync(Category category)
-        {
-            _context.Update(category);
-            await _context.SaveChangesAsync();
-            return category;
-        }
+       
     }
 }

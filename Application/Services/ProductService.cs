@@ -1,4 +1,5 @@
-﻿using Application.Common.Models;
+﻿using Application.Common.Exceptions;
+using Application.Common.Models;
 using Application.Common.Requests;
 using Application.DTOs;
 using Application.Interfaces;
@@ -36,7 +37,12 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetByUserIdAsync(userId));
         }
 
-        public async Task CreateAsync(CreateProductDto productDto, int userId)
+        public async Task<ProductResponseDto> GetProductByIdAsync(int id) 
+        {
+            return _mapper.Map<ProductResponseDto>(await _productRepository.GetByIdAsync(id));
+        }
+
+        public async Task<ProductResponseDto> CreateAsync(CreateProductDto productDto, int userId)
         {
             var productCode = await _productCodeGenerator.GenerateProductCodeAsync();
             var product = _mapper.Map<Product>(productDto);
@@ -51,8 +57,10 @@ namespace Application.Services
             product.UserId = userId;
             product.CreatedBy = userId;
             product.CreatedDate = DateTime.UtcNow;
-            await _productRepository.CreateAsync(product);
 
+          var createdProduct = await _productRepository.CreateAsync(product);
+
+            return _mapper.Map<ProductResponseDto>(createdProduct);
         }
 
         public async Task UpdateAsync(UpdateProductDto productDto, int userId)
@@ -81,6 +89,11 @@ namespace Application.Services
             product.UserId = userId;
             await _productRepository.UpdateAsync(product);
 
+        }
+
+        public async Task DeleteAProductAsync(int id, int userId)
+        {
+            await _productRepository.DeleteAsync(id,userId);
         }
         public async Task<List<ProductDto>> ImportProductsAsync(IFormFile file, int userId)
         {

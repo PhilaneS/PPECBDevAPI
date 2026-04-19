@@ -1,9 +1,8 @@
-﻿using Application.Common.Models;
+﻿using API.Response;
+using Application.Common.Models;
 using Application.Common.Requests;
 using Application.DTOs;
 using Application.Services;
-using Azure.Core;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,30 +12,35 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ProductsController : ControllerBase
+    public class ProductController : ControllerBase
     {
         private readonly ProductService _productService;
 
-        public ProductsController(ProductService productService)
+        public ProductController(ProductService productService)
         {
             _productService = productService;
         }
-        [HttpGet]
+        [HttpGet("list")]
         public async Task<IActionResult> GetProducts([FromQuery] PagedRequest request)
         {
-            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
-
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            //var products = await _productService.GetByUserIdAsync(userId);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);           
             var products = await _productService.GetPagedAsync(userId,request);
             return Ok(ApiResponse<PagedResponse<ProductDto>>.SuccessResponse(products));
         }
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProduct(int id) 
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var products = await _productService.GetProductByIdAsync(id);
+            return Ok(ApiResponse<ProductResponseDto>.SuccessResponse(products));
+        }
+
+        [HttpPost("create")]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductDto productDto)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            await _productService.CreateAsync(productDto, userId);
-            return Ok(ApiResponse<string>.SuccessResponse("Product created successfully."));
+            var createdProduct = await _productService.CreateAsync(productDto, userId);
+            return Ok(ApiResponse<ProductResponseDto>.SuccessResponse(createdProduct));
         }
         [HttpPut]
         public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDto productDto)
@@ -44,6 +48,13 @@ namespace API.Controllers
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             await _productService.UpdateAsync(productDto, userId);
             return Ok(ApiResponse<string>.SuccessResponse("Product updated successfully."));
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            await _productService.DeleteAProductAsync(id, userId);
+            return Ok(ApiResponse<string>.SuccessResponse("Product deleted successfully."));
         }
 
         [HttpPost("upload-excel")]

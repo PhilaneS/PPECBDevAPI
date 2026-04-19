@@ -1,4 +1,5 @@
-﻿using Application.DTOs;
+﻿using API.Response;
+using Application.DTOs;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,20 +19,19 @@ namespace API.Controllers
         {
             _categoryService = categoryService;
         }
-        [HttpGet]
+        [HttpGet("list")]
         public async Task<IActionResult> GetCategoriesByUserId()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var categories = await _categoryService.GetByUserIdAsync(userId);
-            return Ok(categories);
+            return Ok(ApiResponse<IEnumerable<CategoryResponseDto>>.SuccessResponse(categories));
         }
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDto categoryDto)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
             var createdCategory = await _categoryService.CreateAsync(categoryDto, userId);
-            return Ok(createdCategory);
+            return Ok(ApiResponse<CategoryResponseDto>.SuccessResponse(createdCategory));
         }
 
         [HttpGet("{id}")]
@@ -39,7 +39,15 @@ namespace API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var category = await _categoryService.GetByIdAsync(id, userId);
-            return Ok(category);
+            return Ok(ApiResponse<CategoryResponseDto>.SuccessResponse(category));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryDto updateCategoryDto)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var updatedCategory = await _categoryService.UpdateAsync(updateCategoryDto, userId);
+            return Ok(ApiResponse<string>.SuccessResponse("Category updated successfully."));
         }
     }
 }
