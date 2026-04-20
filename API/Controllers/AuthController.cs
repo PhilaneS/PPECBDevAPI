@@ -26,12 +26,12 @@ namespace API.Controllers
         [HttpGet("login")]
         public async Task<IActionResult> Login([FromBody] UserDto userDto)
         {
-            var token = await _userService.LoginAsync(userDto);
-            if (token == null)
+            var data = await _userService.LoginAsync(userDto);
+            if (data == null)
             {
                 return Unauthorized();
             }
-            return Ok(ApiResponse<string>.SuccessResponse(token));
+            return Ok(ApiResponse<string>.SuccessResponse(data));
         }
     }
 }
