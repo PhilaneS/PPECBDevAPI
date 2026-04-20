@@ -1,7 +1,8 @@
-﻿using Application.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using API.Response;
 using Application.DTOs;
-using API.Response;
+using Application.Services;
+using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace API.Controllers
 {
@@ -20,7 +21,7 @@ namespace API.Controllers
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
             await _userService.CreateAsync(userDto);
-            return Ok();
+            return Ok(ApiResponse<string>.SuccessResponse("Registered successfully"));
         }
 
         [HttpGet("login")]
