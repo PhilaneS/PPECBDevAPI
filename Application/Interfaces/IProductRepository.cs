@@ -8,7 +8,7 @@ namespace Application.Interfaces
         Task<Product> GetByIdAndUserIdAsync(int id,int userId);
         Task<Product> GetByIdAsync(int id);
         Task<Product> CreateAsync(Product product);
-        Task<Product> UpdateAsync(Product product);
+        Task<Product> UpdateAsync(Product product, byte[] rowVersion);
         Task DeleteAsync(int id, int userId);
 
         Task<(List<Product>, int)> GetPagedAsync(int userId, int pageNumber, int pageSize);

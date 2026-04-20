@@ -6,6 +6,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 
 namespace Application.Services
@@ -63,10 +64,9 @@ namespace Application.Services
             return _mapper.Map<ProductResponseDto>(createdProduct);
         }
 
-        public async Task UpdateAsync(UpdateProductDto productDto, int userId)
+        public async Task<ResultResponse<ProductResponseDto>> UpdateAsync(UpdateProductDto productDto, int userId)
         {
-
-            var product = _mapper.Map<Product>(productDto);
+            var product = await _productRepository.GetByIdAsync(productDto.Id);
 
             if (productDto.Image != null)
             {
@@ -81,14 +81,58 @@ namespace Application.Services
                 product.ImageUrl = imageUrl;
                 product.ImagePublicId = publicId;
             }
+
+            product.Name = productDto.Name ?? product.Name;
+            product.Description = productDto.Description ?? product.Description;
+            product.Price = productDto.Price != default ? productDto.Price : product.Price;
+            product.CategoryId = productDto.CategoryId ?? product.CategoryId;
+            product.ProductCode = productDto.ProductCode ?? product.ProductCode;
+            product.CategoryName = productDto.CategoryName ?? product.CategoryName;
             product.UpdatedBy = userId;
             product.UpdatedDate = DateTime.UtcNow;
-
-
-
             product.UserId = userId;
-            await _productRepository.UpdateAsync(product);
 
+
+            try
+            {
+              var updatedProduct = await _productRepository.UpdateAsync(product, productDto.RowVersion);
+
+               var mappedProduct = _mapper.Map<ProductResponseDto>(updatedProduct);               
+
+                return new ResultResponse<ProductResponseDto> { Success = true, Data = mappedProduct };
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var entry = ex.Entries.First();
+               
+                var databaseEntry = entry.GetDatabaseValues();
+                if (databaseEntry == null)
+                {
+                    throw new NotFoundException("The product was deleted by another user.");
+                }
+       
+                var databaseValues = (Product)databaseEntry.ToObject();
+
+                var results = new ProductResponseDto
+                {
+                    Id = databaseValues.Id,
+                    Name = databaseValues.Name,
+                    Description = databaseValues.Description,
+                    Price = databaseValues.Price,
+                    CategoryId = databaseValues.CategoryId,
+                    ProductCode = databaseValues.ProductCode,
+                    CategoryName = databaseValues.CategoryName,
+                    ImageUrl = databaseValues.ImageUrl,
+                    RowVersion = databaseValues.RowVersion
+                };
+
+                return new ResultResponse<ProductResponseDto> 
+                { 
+                    Success = false, 
+                    Data = results 
+                };
+
+            }
         }
 
         public async Task DeleteAProductAsync(int id, int userId)

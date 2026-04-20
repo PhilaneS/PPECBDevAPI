@@ -46,9 +46,14 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDto productDto)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            await _productService.UpdateAsync(productDto, userId);
-            return Ok(ApiResponse<string>.SuccessResponse("Product updated successfully."));
+           var updatedProduct = await _productService.UpdateAsync(productDto, userId);
+            if (updatedProduct.Success)
+                return Ok(ApiResponse<ProductResponseDto>.SuccessResponse(updatedProduct.Data));
+
+            return StatusCode(StatusCodes.Status409Conflict, ApiResponse<ProductResponseDto>.Failure("Concurrency conflict occurred", updatedProduct.Data));
+
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

@@ -18,7 +18,12 @@ namespace Infrastructure.Repository
         public async Task<Product> GetByIdAsync(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            
+
+            if (product == null)
+            {
+                throw new NotFoundException($"Product with Id {id} not found.");
+            }
+
             return product;
         }
 
@@ -45,9 +50,13 @@ namespace Infrastructure.Repository
             return product;
         }
 
-        public async Task<Product> UpdateAsync(Product product)
+        public async Task<Product> UpdateAsync(Product product, byte[] rowVersion)
         {
-            _context.Products.Update(product);
+            _context.Products.Attach(product);
+            _context.Entry(product).Property(p => p.RowVersion).OriginalValue = rowVersion;
+
+            _context.Entry(product).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
             return product;
         }

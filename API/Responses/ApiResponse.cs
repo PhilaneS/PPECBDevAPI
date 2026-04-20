@@ -16,12 +16,12 @@
             };
         }
 
-        public static ApiResponse<T> Failure(string error)
+        public static ApiResponse<T> Failure(string error, T data = default!)
         {
             return new ApiResponse<T>
             {
                 Success = false,
-                Data = default,
+                Data = data,
                 Error = error
             };
         }

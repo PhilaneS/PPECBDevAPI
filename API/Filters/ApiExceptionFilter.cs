@@ -1,5 +1,6 @@
 ﻿using API.Response;
 using Application.Common.Exceptions;
+using Application.Common.Models;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace API.Filters
@@ -31,6 +32,17 @@ namespace API.Filters
                     statusCode = StatusCodes.Status400BadRequest;
                     response = ApiResponse<string>.Failure(context.Exception.Message);
                     break;
+                 //case ConcurrencyException concurrencyException :
+                 //   var payload = new ConcurrencyErrorResponse
+                 //   {
+                 //        ClientValues = concurrencyException.ClientValues,
+                 //       Message = concurrencyException.Message,
+                 //       DatabaseValues = concurrencyException.DatabaseValues,
+                 //       NewRowVersion = concurrencyException.RowVerson,
+                 //   };
+                 //   response = ApiResponse<string>.Failure(payload);
+                 //   statusCode = StatusCodes.Status409Conflict;
+                 //   break;
                 default:
                     statusCode = StatusCodes.Status500InternalServerError;
                     response = ApiResponse<string>.Failure("An unexpected error occurred.");

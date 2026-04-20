@@ -47,6 +47,7 @@ namespace Infrastructure.Persistence
                 entity.Property(p => p.Name).IsRequired();
                 //entity.Property(p => p.CategoryName).IsRequired();
                 entity.Property(p => p.Price).HasColumnType("decimal(18,2)");
+                entity.Property(p => p.RowVersion).IsRowVersion().IsRequired();
 
                 // Product -> User (many products belong to one user)
                 entity.HasOne(p => p.User)

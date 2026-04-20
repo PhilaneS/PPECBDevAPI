@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.DTOs
 {
-    public class UpdateProductDto: BaseEntity
+    public class UpdateProductDto
     {
         public int Id { get; set; }
         public string? Name { get; set; }
@@ -15,6 +15,10 @@ namespace Application.DTOs
         public string? ImageUrl { get; set; } = null;
         public IFormFile? Image { get; set; }
         public string? ImagePublicId { get; set; }
+        public required byte[] RowVersion { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+
 
     }
 }
