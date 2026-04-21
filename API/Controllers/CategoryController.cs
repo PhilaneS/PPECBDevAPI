@@ -20,11 +20,11 @@ namespace API.Controllers
             _categoryService = categoryService;
         }
         [HttpGet("list")]
-        public async Task<IActionResult> GetCategoriesByUserId()
+        public async Task<IActionResult> GetCategories()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var categories = await _categoryService.GetByUserIdAsync(userId);
-            return Ok(ApiResponse<IEnumerable<CategoryResponseDto>>.SuccessResponse(categories));
+            var categories = await _categoryService.GetAllAsync();
+            return Ok(ApiResponse<IEnumerable<CategoryOptionResponseDto>>.SuccessResponse(categories));
         }
         [HttpPost("create")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDto categoryDto)

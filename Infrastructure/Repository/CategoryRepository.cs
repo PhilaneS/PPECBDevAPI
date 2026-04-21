@@ -45,6 +45,10 @@ namespace Infrastructure.Repository
         {
             return await _context.Categories.Where(c => c.UserId == userId).ToListAsync();
         }
-       
+
+        public async Task<IEnumerable<Category>> GetAllAsync()
+        {
+            return await _context.Categories.ToListAsync();
+        }
     }
 }

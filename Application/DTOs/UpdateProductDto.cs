@@ -12,13 +12,8 @@ namespace Application.DTOs
         public string? Description { get; set; }
         public string? CategoryName { get; set; }
         public decimal Price { get; set; }
-        public string? ImageUrl { get; set; } = null;
         public IFormFile? Image { get; set; }
-        public string? ImagePublicId { get; set; }
-        public required byte[] RowVersion { get; set; }
-        public int CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-
+        public  byte[]? RowVersion { get; set; }
 
     }
 }
