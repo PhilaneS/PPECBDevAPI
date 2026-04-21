@@ -1,4 +1,5 @@
-﻿using Application.DTOs;
+﻿using Application.Common.Exceptions;
+using Application.DTOs;
 using Application.Interfaces;
 
 namespace Application.Services
@@ -26,12 +27,10 @@ namespace Application.Services
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
             {
-                throw new UnauthorizedAccessException("Invalid email or password.");
+                throw new NotFoundException("Invalid email or password.");
             }
 
-            var token = _tokenGenerator.GenerateToken(user.Id, user.Email);
-
-            return token;
+            return _tokenGenerator.GenerateToken(user.Id, user.Email); ;
         }
 
     }

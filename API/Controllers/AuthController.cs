@@ -24,7 +24,7 @@ namespace API.Controllers
             return Ok(ApiResponse<string>.SuccessResponse("Registered successfully"));
         }
 
-        [HttpGet("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDto userDto)
         {
             var data = await _userService.LoginAsync(userDto);

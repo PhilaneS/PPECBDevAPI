@@ -33,9 +33,9 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetByUserIdAsync(int userId)
+        public async Task<IEnumerable<ProductResponseDto>> GetByUserIdAsync(int userId)
         {
-            return _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetByUserIdAsync(userId));
+            return _mapper.Map<IEnumerable<ProductResponseDto>>(await _productRepository.GetByUserIdAsync(userId));
         }
 
         public async Task<ProductResponseDto> GetProductByIdAsync(int id) 
@@ -163,13 +163,13 @@ namespace Application.Services
             return _excelService.ExportProductsToExcelAsync(_mapper.Map<List<ProductDto>>(products));
         }
 
-        public async Task<PagedResponse<ProductDto>> GetPagedAsync(int userId, PagedRequest request)
+        public async Task<PagedResponse<ProductResponseDto>> GetPagedAsync(int userId, PagedRequest request)
         {
             var (products, totalCount) = await _productRepository.GetPagedAsync(userId, request.PageNumber, request.PageSize);
 
-            var mapped = _mapper.Map<List<ProductDto>>(products);
+            var mapped = _mapper.Map<List<ProductResponseDto>>(products);
 
-            return new PagedResponse<ProductDto> 
+            return new PagedResponse<ProductResponseDto> 
             { 
                 Data = mapped, 
                 PageNumber = request.PageNumber, 

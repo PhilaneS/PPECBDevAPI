@@ -25,7 +25,7 @@ namespace API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);           
             var products = await _productService.GetPagedAsync(userId,request);
-            return Ok(ApiResponse<PagedResponse<ProductDto>>.SuccessResponse(products));
+            return Ok(ApiResponse<PagedResponse<ProductResponseDto>>.SuccessResponse(products));
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProduct(int id) 
