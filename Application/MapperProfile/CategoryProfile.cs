@@ -22,12 +22,12 @@ namespace Application.MapperProfile
 
             // Category <-> CategoryResponseDto
             CreateMap<Category, CategoryResponseDto>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
+                //.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
 
             //Category <-> CategoryOptionResponseDto
             CreateMap<Category, CategoryOptionResponseDto>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
+                //.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
 
         }

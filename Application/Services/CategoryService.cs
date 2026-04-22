@@ -19,13 +19,13 @@ namespace Application.Services
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<CategoryOptionResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<CategoryResponseDto>> GetAllAsync()
         {
             var categories = await _categoryRepository.GetAllAsync();
             if (!categories.Any())
                 throw new NotFoundException("Categories not found.");
 
-            return _mapper.Map<IEnumerable<CategoryOptionResponseDto>>(categories);
+            return _mapper.Map<IEnumerable<CategoryResponseDto>>(categories);
         }
 
         public async Task<IEnumerable<CategoryResponseDto>> GetByUserIdAsync(int userId)

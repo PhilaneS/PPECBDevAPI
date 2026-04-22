@@ -24,7 +24,7 @@ namespace API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var categories = await _categoryService.GetAllAsync();
-            return Ok(ApiResponse<IEnumerable<CategoryOptionResponseDto>>.SuccessResponse(categories));
+            return Ok(ApiResponse<IEnumerable<CategoryResponseDto>>.SuccessResponse(categories));
         }
         [HttpPost("create")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDto categoryDto)
