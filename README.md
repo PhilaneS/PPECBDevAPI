@@ -68,23 +68,23 @@ Repositories
 
     Features Implemented
         Backend          
-        ✔ JWT Authentication
-        ✔ Clean Architecture
-        ✔ Product CRUD
-        ✔ Category management
-        ✔ Image upload (Cloudinary)
-        ✔ Excel import (EPPlus)
-        ✔ Concurrency handling (RowVersion)
-        ✔ Global exception middleware
-        ✔ Standard API responses
+         JWT Authentication
+         Clean Architecture
+         Product CRUD
+         Category management
+         Image upload (Cloudinary)
+         Excel import (EPPlus)
+         Concurrency handling (RowVersion)
+         Global exception middleware
+         Standard API responses
         
         Frontend      
-        ✔ React + TypeScript
-        ✔ Login system
-        ✔ Protected routes
-        ✔ Product list
-        ✔ Excel upload UI
-        ✔ Axios interceptor (JWT)
+         React + TypeScript
+         Login system
+         Protected routes
+         Product list
+         Excel upload UI
+         Axios interceptor (JWT)
    
 3. How to Run the Full System
    -
@@ -96,18 +96,17 @@ Repositories
         Run React:
         npm run dev 
 
-Step 3
-Open browser:
-http://localhost:5173
-
-Step 4
-
-Test flow:
-
-Login
-View products
-Upload Excel
-Create product
+        Step 3
+        Open browser:
+        http://localhost:5173
+        
+        Step 4
+        
+        Test flow:
+        Login
+        View products
+        Upload Excel
+        Create product
 
 
 
