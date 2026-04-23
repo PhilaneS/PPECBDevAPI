@@ -37,16 +37,14 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var category = await _categoryService.GetByIdAsync(id, userId);
+            var category = await _categoryService.GetByIdAsync(id);
             return Ok(ApiResponse<CategoryResponseDto>.SuccessResponse(category));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryDto updateCategoryDto)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var updatedCategory = await _categoryService.UpdateAsync(updateCategoryDto, userId);
+            var updatedCategory = await _categoryService.UpdateAsync(updateCategoryDto);
             return Ok(ApiResponse<string>.SuccessResponse("Category updated successfully."));
         }
     }

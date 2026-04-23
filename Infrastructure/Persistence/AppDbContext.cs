@@ -33,11 +33,7 @@ namespace Infrastructure.Persistence
                 entity.Property(c => c.CategoryCode).IsRequired();
                 entity.Property(c => c.IsActive).IsRequired();
 
-                // Category -> User (many categories belong to one user)
-                entity.HasOne(c => c.User)
-                      .WithMany()
-                      .HasForeignKey(c => c.UserId)
-                      .OnDelete(DeleteBehavior.Restrict);
+   
             });
 
             modelBuilder.Entity<Product>(entity =>

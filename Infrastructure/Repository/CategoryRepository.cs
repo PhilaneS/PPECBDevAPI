@@ -33,17 +33,12 @@ namespace Infrastructure.Repository
             return category;
         }
 
-        public async Task<Category> GetByIdAsync(int id, int userId)
+        public async Task<Category> GetByIdAsync(int id)
         {
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id && c.UserId == userId);
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
             if (category == null)
                 throw new NotFoundException("Category is not found");
             return category;
-        }
-
-        public async Task<IEnumerable<Category>> GetByUserIdAsync(int userId)
-        {
-            return await _context.Categories.Where(c => c.UserId == userId).ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetAllAsync()

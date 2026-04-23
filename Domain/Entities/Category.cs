@@ -9,8 +9,6 @@ namespace Domain.Entities
         public required string CategoryCode { get; set; }
         public List<Product>? Products { get; set; }
         public required bool IsActive { get; set; }
-
-        public User? User { get; set; }
-        public int UserId { get; set; }
+       
     }
 }

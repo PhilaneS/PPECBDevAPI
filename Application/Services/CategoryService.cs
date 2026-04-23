@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Common;
 using Domain.Constants;
 using Domain.Entities;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Application.Services
@@ -23,16 +24,7 @@ namespace Application.Services
         {
             var categories = await _categoryRepository.GetAllAsync();
             if (!categories.Any())
-                throw new NotFoundException("Categories not found.");
-
-            return _mapper.Map<IEnumerable<CategoryResponseDto>>(categories);
-        }
-
-        public async Task<IEnumerable<CategoryResponseDto>> GetByUserIdAsync(int userId)
-        {
-            var categories = await _categoryRepository.GetByUserIdAsync(userId);
-            if (categories == null || !categories.Any())
-                throw new NotFoundException("Categories not found.");
+                return new  List< CategoryResponseDto >();
 
             return _mapper.Map<IEnumerable<CategoryResponseDto>>(categories);
         }
@@ -49,21 +41,20 @@ namespace Application.Services
             var category = _mapper.Map<Category>(categoryDto);
             
             category.CreatedDate = DateTime.UtcNow;
-            category.CreatedBy = userId;
-            category.UserId = userId;
+            category.CreatedBy = userId;            
             var createdCategory =  await _categoryRepository.CreateAsync(category);
 
             return _mapper.Map<CategoryResponseDto>(createdCategory);
         }
 
-        public async Task<CategoryResponseDto> UpdateAsync(UpdateCategoryDto updateCategoryDto, int userId)
+        public async Task<CategoryResponseDto> UpdateAsync(UpdateCategoryDto updateCategoryDto)
         {
 
 
             if (!Regex.IsMatch(updateCategoryDto.CategoryCode, Constants.CategoryCodePattern))
                 throw new ValidationException("Invalid format. Use ABC123.");
 
-            var existingCategory = await _categoryRepository.GetByIdAsync(updateCategoryDto.CategoryId, userId);
+            var existingCategory = await _categoryRepository.GetByIdAsync(updateCategoryDto.CategoryId);
             if (existingCategory == null)
                 throw new NotFoundException($"Category with Id {updateCategoryDto.CategoryId} not found.");
 
@@ -79,17 +70,15 @@ namespace Application.Services
             existingCategory.Name = updateCategoryDto.Name;
             existingCategory.IsActive = updateCategoryDto.IsActive;
             existingCategory.CategoryCode = updateCategoryDto.CategoryCode;
-            existingCategory.UpdatedDate = DateTime.UtcNow;
-            existingCategory.UpdatedBy = userId;
-            existingCategory.UserId = userId;
+            existingCategory.UpdatedDate = DateTime.UtcNow;                       
 
             await _categoryRepository.UpdateAsync(existingCategory);
 
             return _mapper.Map<CategoryResponseDto>(existingCategory);
         }
-        public async Task<CategoryResponseDto> GetByIdAsync(int id, int userId)
+        public async Task<CategoryResponseDto> GetByIdAsync(int id)
         {
-            var category = await _categoryRepository.GetByIdAsync(id, userId);
+            var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
                 throw new NotFoundException("Category not Found");

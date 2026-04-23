@@ -12,12 +12,12 @@ namespace Infrastructure.Repository
 
         public ProductRepository(AppDbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task<Product> GetByIdAsync(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null)
             {
@@ -30,11 +30,12 @@ namespace Infrastructure.Repository
 
         public async Task<IEnumerable<Product>> GetByUserIdAsync(int userId)
         {
-           return await _context.Products.Where(p => p.UserId == userId).ToListAsync();
+           return await _context.Products.AsNoTracking().Where(p => p.UserId == userId).ToListAsync();
         }
         public async Task<Product> CreateAsync(Product product)
         {
-             _context.Products.Add(product);
+            if (product == null) throw new ArgumentNullException(nameof(product));
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
             return product;
@@ -42,7 +43,7 @@ namespace Infrastructure.Repository
 
         public async Task<Product> GetByIdAndUserIdAsync(int id, int userId)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
             if (product == null)
             {
                 throw new NotFoundException($"Product with Id {id} and UserId {userId} not found.");
@@ -52,6 +53,9 @@ namespace Infrastructure.Repository
 
         public async Task<Product> UpdateAsync(Product product, byte[] rowVersion)
         {
+            if (product == null) throw new ArgumentNullException(nameof(product));
+            if (rowVersion == null) throw new ArgumentNullException(nameof(rowVersion));
+
             _context.Products.Attach(product);
             _context.Entry(product).Property(p => p.RowVersion).OriginalValue = rowVersion;
 
@@ -62,8 +66,12 @@ namespace Infrastructure.Repository
         }
         public async Task DeleteAsync(int id, int userId)
         {
-           var deletedProduct =  _context.Products.Where(p => p.Id == id && p.UserId == userId);            
-            _context.Products.RemoveRange(deletedProduct);
+           var product =  _context.Products.Where(p => p.Id == id && p.UserId == userId);
+            if (product == null)
+            {
+                throw new NotFoundException($"Product with Id {id} and UserId {userId} not found.");
+            }
+            _context.Products.RemoveRange(product);
             var deleted = await _context.SaveChangesAsync();
         }
         public async Task<(List<Product>, int)> GetPagedAsync(
@@ -71,7 +79,10 @@ namespace Infrastructure.Repository
            int pageNumber,
            int pageSize)
         {
-            var query = _context.Products
+            if(pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            var query = _context.Products.AsNoTracking()
                 .Where(p => p.UserId == userId)
                 .Include(p => p.Category);
 

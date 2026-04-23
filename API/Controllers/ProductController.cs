@@ -1,4 +1,5 @@
 ﻿using API.Response;
+using Application.Common.Exceptions;
 using Application.Common.Models;
 using Application.Common.Requests;
 using Application.DTOs;
@@ -68,7 +69,7 @@ namespace API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             if (request.File == null || request.File.Length == 0)
-                return BadRequest("File is required");
+                throw new ValidationException("File is required");
 
             await _productService.ImportProductsAsync(request.File, userId);
             return Ok(ApiResponse<string>.SuccessResponse("Excel file uploaded and processed successfully."));
