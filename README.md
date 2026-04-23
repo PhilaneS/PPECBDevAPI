@@ -218,10 +218,12 @@ Infrastructure/
 ```
 src/
  ├── api/
- ├── models/
- ├── services/
- ├── pages/
  ├── components/
+ ├── context/
+ ├── hooks/
+ ├── models/
+ ├── pages/
+ ├── services/
  └── utils/
 ```
 
@@ -243,9 +245,3 @@ src/
 
 
 
-
-# Author
-
-**Your Name**
-
----
