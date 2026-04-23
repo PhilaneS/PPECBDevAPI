@@ -1,29 +1,105 @@
-System Overview
+#  System Overview
 
-- Frontend (React + TypeScript)
-        
-- Backend API (.NET 8 + JWT + EF Core)
-        
-- SQL Server + Cloudinary
+A full-stack product catalog system built with **ASP.NET Core (.NET 8)** and **React + TypeScript**, implementing clean architecture, JWT authentication, image uploads, Excel import/export, and concurrency handling.
 
-Repositories
+---
 
-- API Repo => https://github.com/PhilaneS/PPECBDevAPI.git
-- Web Repo => https://github.com/PhilaneS/PPECBWeb.git
+#  Tech Stack
 
-1. Backend Setup (.NET API)
-   -
-   From powershel or Terminal (VS)
-  git clone https://github.com/PhilaneS/PPECBDevAPI.git
-   cd API
+##  Backend
 
-- Config appsettings.json
-   {
+* ASP.NET Core (.NET 8)
+* Entity Framework Core
+* SQL Server
+* JWT Authentication
+* Cloudinary (image storage)
+* EPPlus (Excel processing)
+
+##  Frontend
+
+* React (Vite)
+* TypeScript
+* Axios
+* React Router
+
+---
+
+#  Architecture
+
+This project follows **Clean Architecture** principles:
+
+```
+API → Application → Domain → Infrastructure
+```
+
+* **API Layer**: Controllers, Middleware
+* **Application Layer**: Services, DTOs, Interfaces
+* **Domain Layer**: Entities, Value Objects
+* **Infrastructure Layer**: Repositories, External services
+
+---
+
+#  Features
+
+##  Backend
+
+* JWT Authentication & Authorization
+* Product & Category Management
+* Image Upload (Cloudinary)
+* Excel Import (Bulk Products)
+* Concurrency Handling (RowVersion)
+* Global Exception Middleware
+* Standardized API Responses
+* Paging Support
+
+##  Frontend
+
+* Login with JWT
+* Protected Routes
+* Product Listing
+* Excel Upload UI
+* API Integration with Axios Interceptors
+
+---
+
+#  System Flow
+
+```
+React App → ASP.NET API → SQL Server
+                      → Cloudinary
+```
+
+---
+
+#  Repositories
+
+| Layer | Repository                                   |
+| ----- | -------------------------------------------- |
+| API   | https://github.com/ |
+| Web   | https://github.com/PhilaneS/PPECBWeb         |
+
+---
+
+#  Backend Setup
+
+## 1️ Clone repository
+
+```bash
+git clone https://github.com/
+cd product-api
+```
+
+---
+
+## 2️ Configure `appsettings.json`
+
+```json
+{
   "ConnectionStrings": {
     "DefaultConnection": "Server=.;Database=ProductDb;Trusted_Connection=True;TrustServerCertificate=True;"
   },
   "JwtSettings": {
-    "Key": "your_super_secret_key_32_chars_min",
+    "Key": "your_super_secret_key",
     "Issuer": "Dev",
     "Audience": "DevUser",
     "ExpiryMinutes": 60
@@ -34,79 +110,142 @@ Repositories
     "ApiSecret": "your_api_secret"
   }
 }
-- Apply database migrations
-   dotnet ef database update
-   
-- Run API
-   dotnet run
-   API will run at: https://localhost:5000
-   Swagger: https://localhost:5000/swagger
-   
-2. Frontend Setup (React + TypeScript)
-   -
-   - git clone  https://github.com/PhilaneS/PPECBWeb.git
-   - cd ppecd-product-app
+```
 
-     Install dependencies
-     - npm install
+---
 
-    Configure API URL
-   
-   src/api/axios.ts
+## 3️ Apply migrations
 
-   App runs at:
-   
-   http://localhost:5173
+``
+dotnet ef database update
+```
 
-   Authentication Flow
-    1. Go to /login
-    2. Enter credentials
-    3. API returns JWT
-    4. Token stored in localStorage
-    5. Axios attaches token automatically:
-         Authorization: Bearer <token>
+---
 
-    Features Implemented
-        Backend          
-         JWT Authentication
-         Clean Architecture
-         Product CRUD
-         Category management
-         Image upload (Cloudinary)
-         Excel import (EPPlus)
-         Concurrency handling (RowVersion)
-         Global exception middleware
-         Standard API responses
-        
-        Frontend      
-         React + TypeScript
-         Login system
-         Protected routes
-         Product list
-         Excel upload UI
-         Axios interceptor (JWT)
-   
-3. How to Run the Full System
-   -
-        Step 1
-        Run API:  
-        dotnet run
-        
-        Step 2
-        Run React:
-        npm run dev 
+## 4️ Run API
 
-        Step 3
-        Open browser:
-        http://localhost:5173
-        
-        Step 4
-        
-        Test flow:
-        Login
-        View products
-        Upload Excel
-        Create product
+```
+dotnet run
+```
+
+ API Base URL:
+
+```
+https://localhost:5000
+```
+
+ Swagger:
+
+```
+https://localhost:5000/swagger
+```
+
+---
+
+#  Frontend Setup
+
+## 1️ Clone repository
+
+```
+git clone https://github.com/PhilaneS/PPECBWeb.git
+cd ppecd-product-app
+```
+
+---
+
+## 2️ Install dependencies
+
+```
+npm install
+```
+
+---
+
+## 3️ Configure API URL
+
+Update:
+
+```
+src/api/axios.ts
+```
+
+```ts
+baseURL: "https://localhost:500/api"
+```
+
+---
+
+ 4️ Run React App
+
+```
+npm run dev
+```
+
+ Frontend URL:
+
+```
+http://localhost:500
+```
+
+---
+
+#  Authentication Flow
+
+1. User logs in via `/login`
+2. API returns JWT token
+3. Token stored in browser (`localStorage`)
+4. Axios attaches token automatically:
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+#  Project Structure
+
+## Backend
+
+```
+API/
+Application/
+Domain/
+Infrastructure/
+```
+
+## Frontend
+
+```
+src/
+ ├── api/
+ ├── models/
+ ├── services/
+ ├── pages/
+ ├── components/
+ └── utils/
+```
+
+---
+
+#  Excel Upload
+
+* Endpoint: `POST /api/product/upload-excel`
+* Content-Type: `multipart/form-data`
+* Supported format: `.xlsx`
+
+---
+
+# Image Upload
+
+* Handled via Cloudinary
+* Images stored per user folder:
 
 
 
+
+
+# Author
+
+**Your Name**
+
+---
