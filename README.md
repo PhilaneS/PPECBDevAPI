@@ -85,8 +85,8 @@ React App → ASP.NET API → SQL Server
 ## 1️ Clone repository
 
 ```bash
-git clone https://github.com/
-cd product-api
+git clone [https://github.com/](https://github.com/PhilaneS/PPECBDevAPI.git )
+cd PPECBDevAPI
 ```
 
 ---
@@ -146,7 +146,7 @@ https://localhost:5000/swagger
 
 ## 1️ Clone repository
 
-```
+```base
 git clone https://github.com/PhilaneS/PPECBWeb.git
 cd ppecd-product-app
 ```
