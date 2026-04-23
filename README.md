@@ -67,34 +67,34 @@ Repositories
          Authorization: Bearer <token>
 
     Features Implemented
-          Backend          
-          ✔ JWT Authentication
-          ✔ Clean Architecture
-          ✔ Product CRUD
-          ✔ Category management
-          ✔ Image upload (Cloudinary)
-          ✔ Excel import (EPPlus)
-          ✔ Concurrency handling (RowVersion)
-          ✔ Global exception middleware
-          ✔ Standard API responses
-
-           Frontend      
-          ✔ React + TypeScript
-          ✔ Login system
-          ✔ Protected routes
-          ✔ Product list
-          ✔ Excel upload UI
-          ✔ Axios interceptor (JWT)
+        Backend          
+        ✔ JWT Authentication
+        ✔ Clean Architecture
+        ✔ Product CRUD
+        ✔ Category management
+        ✔ Image upload (Cloudinary)
+        ✔ Excel import (EPPlus)
+        ✔ Concurrency handling (RowVersion)
+        ✔ Global exception middleware
+        ✔ Standard API responses
+        
+        Frontend      
+        ✔ React + TypeScript
+        ✔ Login system
+        ✔ Protected routes
+        ✔ Product list
+        ✔ Excel upload UI
+        ✔ Axios interceptor (JWT)
    
 3. How to Run the Full System
    -
-   Step 1
-    Run API:  
-    dotnet run
-   
-  Step 2
-Run React:
-npm run dev 
+        Step 1
+        Run API:  
+        dotnet run
+        
+        Step 2
+        Run React:
+        npm run dev 
 
 Step 3
 Open browser:
