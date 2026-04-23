@@ -75,8 +75,8 @@ React App → ASP.NET API → SQL Server
 
 | Layer | Repository                                   |
 | ----- | -------------------------------------------- |
-| API   | https://github.com/ |
-| Web   | https://github.com/PhilaneS/PPECBWeb         |
+| API   | https://github.com/PhilaneS/PPECBDevAPI.git  |
+| Web   | https://github.com/PhilaneS/PPECBWeb.git     |
 
 ---
 
